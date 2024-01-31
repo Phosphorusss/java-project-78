@@ -7,26 +7,38 @@ import org.junit.jupiter.api.Test;
 public class isValidTest {
     private Validator validator;
     private StringSchema st;
+    private NumberSchema ns;
 
     @BeforeEach
     public void beforeEach () {
         validator = new Validator();
         st = validator.string();
+        ns = validator.number();
     }
 
     @Test
     public void isValidNull() {
-        var expected = true;
-        var actual = st.isValid(null);
-        assertEquals(expected, actual);
+        var expectedString = true;
+        var actualString = st.isValid(null);
+        assertEquals(expectedString, actualString);
+
+        var expectedNumber = true;
+        var actualNumber = ns.isValid(null);
+        assertEquals(expectedNumber, actualNumber);
+
     }
 
     @Test
     public void isValidNotNull() {
-        var expected = false;
+        var expectedString = false;
         st.required();
-        var actual = st.isValid(null);
-        assertEquals(expected, actual);
+        var actualString = st.isValid(null);
+        assertEquals(expectedString, actualString);
+
+        var expectedNumber = false;
+        ns.requiredI();
+        var actualNumber = ns.isValid(null);
+        assertEquals(expectedNumber, actualNumber);
     }
 
     @Test
@@ -53,5 +65,21 @@ public class isValidTest {
         st.required();
         var actual = st.isValid("testString");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void isValidPositive() {
+        var expectedNumber = false;
+        ns.positive();
+        var actualNumber = st.isValid(-5);
+        assertEquals(expectedNumber, actualNumber);
+    }
+
+    @Test
+    public void isValidRange() {
+        var expectedNumber = true;
+        ns.range(5,10);
+        var actualNumber = ns.isValid(5);
+        assertEquals(expectedNumber, actualNumber);
     }
 }

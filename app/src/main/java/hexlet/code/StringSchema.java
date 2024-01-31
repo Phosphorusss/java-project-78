@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class StringSchema {
-    public boolean schema;
-    List<Predicate> predicates = new ArrayList<>();
-
+public class StringSchema extends BaseSchema{
     public StringSchema() {
         this.addPredicate(obj -> obj == null || obj instanceof String);
     }
@@ -27,14 +24,5 @@ public class StringSchema {
 
     public void contains(String substring) {
         addPredicate(obj -> obj.toString().contains(substring));
-    }
-
-    public boolean isValid(String obj) {
-        for (var predicate : predicates) {
-            if (!predicate.test(obj)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
