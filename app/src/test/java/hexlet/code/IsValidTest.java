@@ -1,19 +1,31 @@
 package hexlet.code;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class isValidTest {
+
+public class IsValidTest {
     private Validator validator;
     private StringSchema st;
     private NumberSchema ns;
+    private MapSchema ms;
+    private Map map;
 
     @BeforeEach
-    public void beforeEach () {
+    public void beforeEach() {
         validator = new Validator();
         st = validator.string();
         ns = validator.number();
+        ms = validator.map();
+
+        map = new HashMap<String, String>();
+        map.put("key1", "value1");
+        map.put("key2", "value2");
     }
 
     @Test
@@ -25,6 +37,10 @@ public class isValidTest {
         var expectedNumber = true;
         var actualNumber = ns.isValid(null);
         assertEquals(expectedNumber, actualNumber);
+
+        var expectedMap = true;
+        var actualMap = ns.isValid(null);
+        assertEquals(expectedMap, actualMap);
 
     }
 
@@ -39,6 +55,11 @@ public class isValidTest {
         ns.requiredI();
         var actualNumber = ns.isValid(null);
         assertEquals(expectedNumber, actualNumber);
+
+        var expectedMap = false;
+        ms.required();
+        var actualMap = ns.isValid(null);
+        assertEquals(expectedMap, actualMap);
     }
 
     @Test
@@ -78,8 +99,16 @@ public class isValidTest {
     @Test
     public void isValidRange() {
         var expectedNumber = true;
-        ns.range(5,10);
+        ns.range(5, 10);
         var actualNumber = ns.isValid(5);
         assertEquals(expectedNumber, actualNumber);
+    }
+
+    @Test
+    public void isValidSizeof() {
+        var expectedMap = true;
+        ms.sizeof(2);
+        var actualMap = ms.isValid(map);
+        assertEquals(expectedMap, actualMap);
     }
 }
