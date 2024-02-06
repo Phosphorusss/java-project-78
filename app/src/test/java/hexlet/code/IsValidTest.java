@@ -70,7 +70,7 @@ public class IsValidTest {
         assertEquals(expectedString, actualString);
 
         var expectedNumber = false;
-        numberSchema.requiredI();
+        numberSchema.required();
         var actualNumber = numberSchema.isValid(null);
         assertEquals(expectedNumber, actualNumber);
 

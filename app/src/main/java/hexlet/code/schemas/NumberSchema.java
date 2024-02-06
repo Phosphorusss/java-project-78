@@ -12,7 +12,7 @@ public class NumberSchema extends BaseSchema {
         return this;
     }
 
-    public NumberSchema requiredI() {
+    public NumberSchema required() {
         addPredicates(obj -> obj != null);
         return this;
     }
