@@ -7,8 +7,9 @@ public class StringSchema extends BaseSchema {
         this.addPredicate(obj -> obj == null || obj instanceof String);
     }
 
-    private void addPredicate(Predicate predicate) {
+    private StringSchema addPredicate(Predicate predicate) {
         predicates.add(predicate);
+        return this;
     }
 
     public StringSchema minLength(int minLength) {
@@ -21,7 +22,8 @@ public class StringSchema extends BaseSchema {
         return this;
     }
 
-    public void contains(String substring) {
+    public StringSchema contains(String substring) {
         addPredicate(obj -> obj.toString().contains(substring));
+        return this;
     }
 }

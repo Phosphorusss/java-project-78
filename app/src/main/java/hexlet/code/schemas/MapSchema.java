@@ -8,22 +8,26 @@ public class MapSchema extends BaseSchema {
         addPredicate(obj -> obj == null || obj instanceof Map<?, ?>);
     }
 
-    public void shape(Map<String, BaseSchema<String>> schemas) {
+    public MapSchema shape(Map<String, BaseSchema<String>> schemas) {
         addPredicate(validatedMap -> schemas.entrySet().stream().allMatch(schemaMap -> {
             var value = ((Map<?, ?>) validatedMap).get(schemaMap.getKey());
             return schemaMap.getValue().isValid((String) value);
         }));
+        return this;
     }
 
-    private void addPredicate(Predicate predicate) {
+    private MapSchema addPredicate(Predicate predicate) {
         predicates.add(predicate);
+        return this;
     }
 
-    public void required() {
+    public MapSchema required() {
         addPredicate(obj -> obj != null);
+        return this;
     }
 
-    public void sizeof(int size) {
+    public MapSchema sizeof(int size) {
         addPredicate(obj -> ((Map<?, ?>) obj).size() == size);
+        return this;
     }
 }

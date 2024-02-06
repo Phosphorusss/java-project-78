@@ -7,19 +7,23 @@ public class NumberSchema extends BaseSchema {
         addPredicates(obj -> obj == null || obj instanceof Integer);
     }
 
-    private void addPredicates(Predicate predicate) {
+    private NumberSchema addPredicates(Predicate predicate) {
         predicates.add(predicate);
+        return this;
     }
 
-    public void requiredI() {
+    public NumberSchema requiredI() {
         addPredicates(obj -> obj != null);
+        return this;
     }
 
-    public void positive() {
+    public NumberSchema positive() {
         addPredicates(obj -> (int) obj > 0);
+        return this;
     }
 
-    public void range(int indexStart, int indexEnd) {
+    public NumberSchema range(int indexStart, int indexEnd) {
         addPredicates(obj -> (int) obj >= indexStart && (int) obj <= indexEnd);
+        return this;
     }
 }
