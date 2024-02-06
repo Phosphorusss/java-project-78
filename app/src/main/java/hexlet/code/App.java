@@ -2,31 +2,33 @@ package hexlet.code;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class App {
     public static void main(String[] args) {
         Validator validator = new Validator();
-        //StringSchema st = validator.string();
-        //st.minLength(2);
-        //st.contains("i");
-        //st.required();
-        //System.out.println(st.isValid(null));
-        //System.out.println(st.isValid("si"));
+        var schema = validator.map();
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().required().minLength(2));
+        //System.out.println(schemas);
+        schema.shape(schemas);
 
-        /*NumberSchema ns = validator.number();
-        ns.positive();
-        ns.range(5, 10);
-        ns.isValid(6);*/
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", null);
+        System.out.println(schema.isValid(human1));
 
-        MapSchema map = validator.map();
-        Map<String, String> m = new HashMap<>();
-        //m.put(null, null);
-        //System.out.println(m);
-        m.put("key1", "value1");
-        //m.put("key2", "value2");
-        System.out.println(m);
-        map.sizeof(2);
-        System.out.println(map.isValid(m));
+
+        /*var validator1 = new Validator();
+        var x = validator1.map();
+        var data = new HashMap<String, String>();
+        x.sizeof(2);
+        schema.isValid(data);
+        data.put("key2", "value2");
+        schema.isValid(data);*/
+
+
 
     }
 }

@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import javax.lang.model.type.PrimitiveType;
 import java.util.function.Predicate;
 
 public class StringSchema extends BaseSchema {
@@ -11,13 +12,14 @@ public class StringSchema extends BaseSchema {
         predicates.add(predicate);
     }
 
-    public void minLength(int minLength) {
+    public StringSchema minLength(int minLength) {
         addPredicate(obj -> obj.toString().length() > minLength);
-        System.out.println("run");
+        return this;
     }
 
-    public void required() {
+    public StringSchema required() {
         addPredicate(obj -> obj != null && obj instanceof String && !obj.equals(""));
+        return this;
     }
 
     public void contains(String substring) {

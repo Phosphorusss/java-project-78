@@ -11,104 +11,142 @@ import java.util.Map;
 
 public class IsValidTest {
     private Validator validator;
-    private StringSchema st;
-    private NumberSchema ns;
-    private MapSchema ms;
+    private StringSchema stringSchema;
+    private NumberSchema numberSchema;
+    private MapSchema mapSchema;
     private Map map;
+    private Map human1;
+    private Map human2;
+    private Map human3;
 
     @BeforeEach
     public void beforeEach() {
         validator = new Validator();
-        st = validator.string();
-        ns = validator.number();
-        ms = validator.map();
+        stringSchema = validator.string();
+        numberSchema = validator.number();
+        mapSchema = validator.map();
 
         map = new HashMap<String, String>();
         map.put("key1", "value1");
         map.put("key2", "value2");
+
+        human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+
+        human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+
+        human3 = new HashMap<>();
+        human3.put("firstName", "Anna");
+        human3.put("lastName", "B");
     }
 
     @Test
     public void isValidNull() {
         var expectedString = true;
-        var actualString = st.isValid(null);
+        var actualString = stringSchema.isValid(null);
         assertEquals(expectedString, actualString);
 
         var expectedNumber = true;
-        var actualNumber = ns.isValid(null);
+        var actualNumber = numberSchema.isValid(null);
         assertEquals(expectedNumber, actualNumber);
 
         var expectedMap = true;
-        var actualMap = ns.isValid(null);
+        var actualMap = numberSchema.isValid(null);
         assertEquals(expectedMap, actualMap);
-
     }
 
     @Test
     public void isValidNotNull() {
         var expectedString = false;
-        st.required();
-        var actualString = st.isValid(null);
+        stringSchema.required();
+        var actualString = stringSchema.isValid(null);
         assertEquals(expectedString, actualString);
 
         var expectedNumber = false;
-        ns.requiredI();
-        var actualNumber = ns.isValid(null);
+        numberSchema.requiredI();
+        var actualNumber = numberSchema.isValid(null);
         assertEquals(expectedNumber, actualNumber);
 
         var expectedMap = false;
-        ms.required();
-        var actualMap = ns.isValid(null);
+        mapSchema.required();
+        var actualMap = numberSchema.isValid(null);
         assertEquals(expectedMap, actualMap);
     }
 
     @Test
     public void isValidMinLength() {
         var expected = true;
-        st.minLength(2);
-        var actual = st.isValid("testString");
+        stringSchema.minLength(2);
+        var actual = stringSchema.isValid("testString");
         assertEquals(expected, actual);
     }
 
     @Test
     public void isValidContains() {
         var expected = true;
-        st.contains("Str");
-        var actual = st.isValid("testString");
+        stringSchema.contains("Str");
+        var actual = stringSchema.isValid("testString");
         assertEquals(expected, actual);
     }
 
     @Test
     public void isValidAll() {
         var expected = true;
-        st.contains("Str");
-        st.minLength(3);
-        st.required();
-        var actual = st.isValid("testString");
+        stringSchema.contains("Str");
+        stringSchema.minLength(3);
+        stringSchema.required();
+        var actual = stringSchema.isValid("testString");
         assertEquals(expected, actual);
     }
 
     @Test
     public void isValidPositive() {
         var expectedNumber = false;
-        ns.positive();
-        var actualNumber = st.isValid(-5);
+        numberSchema.positive();
+        var actualNumber = stringSchema.isValid(-5);
         assertEquals(expectedNumber, actualNumber);
     }
 
     @Test
     public void isValidRange() {
         var expectedNumber = true;
-        ns.range(5, 10);
-        var actualNumber = ns.isValid(5);
+        numberSchema.range(5, 10);
+        var actualNumber = numberSchema.isValid(5);
         assertEquals(expectedNumber, actualNumber);
     }
 
     @Test
     public void isValidSizeof() {
         var expectedMap = true;
-        ms.sizeof(2);
-        var actualMap = ms.isValid(map);
+        mapSchema.sizeof(2);
+        var actualMap = mapSchema.isValid(map);
         assertEquals(expectedMap, actualMap);
+    }
+
+    @Test
+    public void isValidValueRequired() {
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().required().minLength(2));
+
+        mapSchema.shape(schemas);
+        var expected = true;
+        var actual = mapSchema.isValid(human1);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void isValidValueMinLength() {
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().required().minLength(2));
+
+        mapSchema.shape(schemas);
+        var expected = false;
+        var actual = mapSchema.isValid(human3);
+        assertEquals(expected, actual);
     }
 }
