@@ -1,6 +1,5 @@
 package hexlet.code;
 
-import javax.lang.model.type.PrimitiveType;
 import java.util.function.Predicate;
 
 public class StringSchema extends BaseSchema {

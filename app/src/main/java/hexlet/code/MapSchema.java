@@ -1,7 +1,6 @@
 package hexlet.code;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public class MapSchema extends BaseSchema {
@@ -11,7 +10,7 @@ public class MapSchema extends BaseSchema {
 
     public void shape(Map<String, BaseSchema<String>> schemas) {
         addPredicate(validatedMap -> schemas.entrySet().stream().allMatch(schemaMap -> {
-            var value = ((Map<?,?>) validatedMap).get(schemaMap.getKey());
+            var value = ((Map<?, ?>) validatedMap).get(schemaMap.getKey());
             return schemaMap.getValue().isValid((String) value);
         }));
     }
