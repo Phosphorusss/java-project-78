@@ -115,6 +115,14 @@ public class IsValidTest {
     }
 
     @Test
+    public void isValidPositiveNull() {
+        var expectedNumber = false;
+        numberSchema.positive();
+        var actualNumber = numberSchema.isValid(null);
+        assertEquals(expectedNumber, actualNumber);
+    }
+
+    @Test
     public void isValidRange() {
         var expectedNumber = true;
         numberSchema.range(5, 10);
