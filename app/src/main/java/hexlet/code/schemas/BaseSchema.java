@@ -1,4 +1,4 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,6 @@ public class BaseSchema<T> {
     public boolean isValid(T obj) {
         for (var predicate : predicates) {
             if (!predicate.test(obj)) {
-                System.out.println(obj);
                 return false;
             }
         }
