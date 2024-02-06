@@ -116,7 +116,7 @@ public class IsValidTest {
 
     @Test
     public void isValidPositiveNull() {
-        var expectedNumber = false;
+        var expectedNumber = true;
         numberSchema.positive();
         var actualNumber = numberSchema.isValid(null);
         assertEquals(expectedNumber, actualNumber);

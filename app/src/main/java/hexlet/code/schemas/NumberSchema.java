@@ -18,12 +18,12 @@ public class NumberSchema extends BaseSchema {
     }
 
     public NumberSchema positive() {
-        addPredicates(obj -> obj != null && (int) obj > 0);
+        addPredicates(obj -> obj == null || (Integer) obj > 0);
         return this;
     }
 
     public NumberSchema range(int indexStart, int indexEnd) {
-        addPredicates(obj -> obj != null && (int) obj >= indexStart && (int) obj <= indexEnd);
+        addPredicates(obj -> (Integer) obj >= indexStart && (Integer) obj <= indexEnd);
         return this;
     }
 }
