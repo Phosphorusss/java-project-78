@@ -1,29 +1,22 @@
 package hexlet.code.schemas;
 
-import java.util.function.Predicate;
-
-public class NumberSchema extends BaseSchema {
+public final class NumberSchema extends BaseSchema {
     public NumberSchema() {
-        addPredicates(obj -> obj == null || obj instanceof Integer);
-    }
-
-    private NumberSchema addPredicates(Predicate predicate) {
-        predicates.add(predicate);
-        return this;
+        setPredicates(obj -> obj == null || obj instanceof Integer);
     }
 
     public NumberSchema required() {
-        addPredicates(obj -> obj != null);
+        setPredicates(obj -> obj != null);
         return this;
     }
 
     public NumberSchema positive() {
-        addPredicates(obj -> obj == null || (Integer) obj > 0);
+        setPredicates(obj -> obj == null || (Integer) obj > 0);
         return this;
     }
 
     public NumberSchema range(int indexStart, int indexEnd) {
-        addPredicates(obj -> (Integer) obj >= indexStart && (Integer) obj <= indexEnd);
+        setPredicates(obj -> (Integer) obj >= indexStart && (Integer) obj <= indexEnd);
         return this;
     }
 }
