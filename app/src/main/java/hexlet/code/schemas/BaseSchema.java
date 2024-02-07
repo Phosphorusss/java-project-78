@@ -14,12 +14,11 @@ public class BaseSchema<T> {
         this.predicates = predicates;
     }
 
-    public void setPredicates(Predicate pr) {
+    public final void setPredicates(Predicate pr) {
         predicates.add(pr);
-        //this.predicates = predicates;
     }
 
-    public boolean isValid(T obj) {
+    public final boolean isValid(T obj) {
         for (var predicate : predicates) {
             if (!predicate.test(obj)) {
                 return false;

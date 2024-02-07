@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class IsValidTest {
+public final class IsValidTest {
     private Validator validator;
     private StringSchema stringSchema;
     private NumberSchema numberSchema;
