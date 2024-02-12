@@ -4,11 +4,11 @@ import java.util.Map;
 
 public final class MapSchema extends BaseSchema {
     public MapSchema() {
-        setPredicates(obj -> obj == null || obj instanceof Map<?, ?>);
+        addPredicate(obj -> obj == null || obj instanceof Map<?, ?>);
     }
 
     public MapSchema shape(Map<String, BaseSchema<String>> schemas) {
-        setPredicates(validatedMap -> schemas.entrySet().stream().allMatch(schemaMap -> {
+        addPredicate(validatedMap -> schemas.entrySet().stream().allMatch(schemaMap -> {
             var value = ((Map<?, ?>) validatedMap).get(schemaMap.getKey());
             return schemaMap.getValue().isValid((String) value);
         }));
@@ -16,12 +16,12 @@ public final class MapSchema extends BaseSchema {
     }
 
     public MapSchema required() {
-        setPredicates(obj -> obj != null);
+        addPredicate(obj -> obj != null);
         return this;
     }
 
     public MapSchema sizeof(int size) {
-        setPredicates(obj -> ((Map<?, ?>) obj).size() == size);
+        addPredicate(obj -> ((Map<?, ?>) obj).size() == size);
         return this;
     }
 }

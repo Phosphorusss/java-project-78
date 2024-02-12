@@ -7,10 +7,7 @@ import java.util.function.Predicate;
 public class BaseSchema<T> {
     private final List<Predicate> predicates = new ArrayList<>();
 
-    public BaseSchema() {
-    }
-
-    public final void setPredicates(Predicate pr) {
+    public final void addPredicate(Predicate pr) {
         predicates.add(pr);
     }
 
