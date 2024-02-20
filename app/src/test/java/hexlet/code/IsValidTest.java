@@ -3,9 +3,6 @@ package hexlet.code;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import hexlet.code.schemas.BaseSchema;
-import hexlet.code.schemas.MapSchema;
-import hexlet.code.schemas.NumberSchema;
-import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,42 +12,19 @@ import java.util.Map;
 
 public final class IsValidTest {
     private Validator validator;
-    private StringSchema stringSchema;
-    private NumberSchema numberSchema;
-    private MapSchema mapSchema;
-    private Map map;
-    private Map human1;
-    private Map human2;
-    private Map human3;
-
     @BeforeEach
     public void beforeEach() {
         validator = new Validator();
-        stringSchema = validator.string();
-        numberSchema = validator.number();
-        mapSchema = validator.map();
-
-        map = new HashMap<String, String>();
-        map.put("key1", "value1");
-        map.put("key2", "value2");
-
-        human1 = new HashMap<>();
-        human1.put("firstName", "John");
-        human1.put("lastName", "Smith");
-
-        human2 = new HashMap<>();
-        human2.put("firstName", "John");
-        human2.put("lastName", null);
-
-        human3 = new HashMap<>();
-        human3.put("firstName", "Anna");
-        human3.put("lastName", "B");
     }
 
     @Test
     public void numberSchemaTest() {
+        var numberSchema = validator.number();
+
         var expectedNumber = true;
         var actualNumber = numberSchema.isValid(null);
+        numberSchema.positive();
+        numberSchema.range(5, 10);
         assertEquals(expectedNumber, actualNumber);
 
         var expected = true;
@@ -63,8 +37,12 @@ public final class IsValidTest {
 
     @Test
     public void stringSchemaTest() {
+        var stringSchema = validator.string();
+
         var expectedString = true;
         var actualString = stringSchema.isValid(null);
+        stringSchema.minLength(2);
+        stringSchema.contains("Str");
         assertEquals(expectedString, actualString);
 
         var expected = true;
@@ -77,6 +55,11 @@ public final class IsValidTest {
 
     @Test
     public void mapSchemaTest() {
+        var mapSchema = validator.map();
+        var map = new HashMap<String, String>();
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+
         var expectedMap = true;
         var actualMap = mapSchema.isValid(null);
         assertEquals(expectedMap, actualMap);
@@ -90,6 +73,19 @@ public final class IsValidTest {
 
     @Test
     public void mapSchemaShapeTest() {
+        var mapSchema = validator.map();
+        var human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+
+        var human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+
+        var human3 = new HashMap<>();
+        human3.put("firstName", "Anna");
+        human3.put("lastName", "B");
+
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
         schemas.put("firstName", validator.string().required());
         schemas.put("lastName", validator.string().required().minLength(2));
