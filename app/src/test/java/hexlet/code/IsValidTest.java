@@ -1,7 +1,5 @@
 package hexlet.code;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import hexlet.code.schemas.BaseSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +7,12 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public final class IsValidTest {
     private Validator validator;
+
     @BeforeEach
     public void beforeEach() {
         validator = new Validator();
@@ -19,61 +20,70 @@ public final class IsValidTest {
 
     @Test
     public void numberSchemaTest() {
-        var numberSchema = validator.number();
+        var schema = validator.number();
 
-        var expectedNumber = true;
-        var actualNumber = numberSchema.isValid(null);
-        numberSchema.positive();
-        numberSchema.range(5, 10);
-        assertEquals(expectedNumber, actualNumber);
+        assertTrue(schema.isValid(6));
+        assertTrue(schema.isValid(null));
 
-        var expected = true;
-        numberSchema.required();
-        numberSchema.positive();
-        numberSchema.range(5, 10);
-        var actual = numberSchema.isValid(5);
-        assertEquals(expected, actual);
+        schema.required();
+        assertFalse(schema.isValid(null));
+        assertFalse(schema.isValid(""));
+        assertTrue(schema.isValid(6));
+        assertTrue(schema.isValid(-4));
+
+        schema.positive();
+        assertFalse(schema.isValid(-4));
+
+        schema.range(5, 10);
+        assertTrue(schema.isValid(5));
+        assertTrue(schema.isValid(10));
+        assertFalse(schema.isValid(4));
     }
 
     @Test
     public void stringSchemaTest() {
-        var stringSchema = validator.string();
+        var schema = validator.string();
 
-        var expectedString = true;
-        var actualString = stringSchema.isValid(null);
-        stringSchema.minLength(2);
-        stringSchema.contains("Str");
-        assertEquals(expectedString, actualString);
+        assertTrue(schema.isValid(null));
+        assertTrue(schema.isValid(""));
 
-        var expected = true;
-        stringSchema.required();
-        stringSchema.minLength(2);
-        stringSchema.contains("Str");
-        var actual = stringSchema.isValid("testString");
-        assertEquals(expected, actual);
+        schema.required();
+        assertFalse(schema.isValid(null));
+        assertFalse(schema.isValid(""));
+        assertTrue(schema.isValid("hexlet"));
+        assertTrue(schema.isValid("what does the fox say"));
+
+        schema.minLength(2);
+        assertTrue(schema.isValid("hexlet"));
+        assertFalse(schema.isValid("h"));
+
+        assertTrue(schema.contains("wh").isValid("what does the fox say"));
+        assertTrue(schema.contains("what").isValid("what does the fox say"));
+        assertFalse(schema.contains("whatthe").isValid("what does the fox say"));
     }
 
     @Test
     public void mapSchemaTest() {
-        var mapSchema = validator.map();
+        var schema = validator.map();
         var map = new HashMap<String, String>();
         map.put("key1", "value1");
         map.put("key2", "value2");
 
-        var expectedMap = true;
-        var actualMap = mapSchema.isValid(null);
-        assertEquals(expectedMap, actualMap);
+        assertTrue(schema.isValid(null));
 
-        var expected = true;
-        mapSchema.required();
-        mapSchema.sizeof(2);
-        var actual = mapSchema.isValid(map);
-        assertEquals(expected, actual);
+        schema.required();
+        assertFalse(schema.isValid(null));
+        assertTrue(schema.isValid(new HashMap<>()));
+        assertTrue(schema.isValid(map));
+
+        schema.sizeof(2);
+        assertTrue(schema.isValid(map));
     }
 
     @Test
     public void mapSchemaShapeTest() {
-        var mapSchema = validator.map();
+        var schema = validator.map();
+
         var human1 = new HashMap<>();
         human1.put("firstName", "John");
         human1.put("lastName", "Smith");
@@ -89,18 +99,10 @@ public final class IsValidTest {
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
         schemas.put("firstName", validator.string().required());
         schemas.put("lastName", validator.string().required().minLength(2));
+        schema.shape(schemas);
 
-        mapSchema.shape(schemas);
-        var expected = true;
-        var actual = mapSchema.isValid(human1);
-        assertEquals(expected, actual);
-
-        var expectedNotNull = false;
-        var actualNotNull = mapSchema.isValid(human2);
-        assertEquals(expectedNotNull, actualNotNull);
-
-        var expectedMinLength = false;
-        var actualMinLength = mapSchema.isValid(human3);
-        assertEquals(expectedMinLength, actualMinLength);
+        assertTrue(schema.isValid(human1));
+        assertFalse(schema.isValid(human2));
+        assertFalse(schema.isValid(human3));
     }
 }
